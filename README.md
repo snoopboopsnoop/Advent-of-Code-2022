@@ -1,4 +1,4 @@
-# advent-of-code-2021
+# advent-of-code-2022
 Collection of solutions to Advent of Code 2022 problems (WIP).
 
 ## Overview

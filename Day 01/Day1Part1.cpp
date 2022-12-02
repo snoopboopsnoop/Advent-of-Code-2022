@@ -20,7 +20,6 @@ int main() {
     while(in) {
         int currElf = 0;
         while(getline(in, line)) {
-            //cout << line << endl;
             if(line == "") break;
             currElf += stoi(line);
         }

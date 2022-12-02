@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// don't worry i took a C++1 course so this time it'll go better
+// if statements? i prefer abstract algebra
 
 int main() {
     // input stream

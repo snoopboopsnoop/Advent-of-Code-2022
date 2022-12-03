@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
+#include <algorithm>
 
 using namespace std;
 
@@ -17,7 +18,6 @@ int main() {
     int result = 0;
 
     while(getline(in, line)) {
-        bool found = false;
 
         // separate 2 compartments
         string s1 = line.substr(0, line.size()/2);
@@ -25,17 +25,14 @@ int main() {
         
         // search for char in s1 also inside s2
         for(size_t i = 0; i < s1.size(); ++i) {
-            if(found == true) break;
-            for(size_t j = 0; j < s2.size(); ++j) {
-                if(s1[i] == s2[j]) {
-                    char c = s1[i];
-                    // calculate priority and add to result
-                    if(isupper(c)) result += 26;
-                    result += tolower(c) - 'a' + 1;
-                    found = true;
-                    break;
-                }
-            }
+            auto itr = find(s2.begin(), s2.end(), s1[i]);
+                if(itr == s2.end()) continue;
+                char c = *itr;
+                
+                // calculate priority and add to result
+                if(isupper(c)) result += 26;
+                result += tolower(c) - 'a' + 1;
+                break;
         }
     }
     

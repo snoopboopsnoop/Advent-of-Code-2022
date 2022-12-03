@@ -26,13 +26,13 @@ int main() {
         // search for char in s1 also inside s2
         for(size_t i = 0; i < s1.size(); ++i) {
             auto itr = find(s2.begin(), s2.end(), s1[i]);
-                if(itr == s2.end()) continue;
-                char c = *itr;
-                
-                // calculate priority and add to result
-                if(isupper(c)) result += 26;
-                result += tolower(c) - 'a' + 1;
-                break;
+            if(itr == s2.end()) continue;
+            char c = *itr;
+            
+            // calculate priority and add to result
+            if(isupper(c)) result += 26;
+            result += tolower(c) - 'a' + 1;
+            break;
         }
     }
     

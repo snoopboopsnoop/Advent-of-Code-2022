@@ -71,7 +71,7 @@ int main() {
         result += i.back();
     }
 
-    cout << "result: " << result << endl;
+    cout << "Crates on the top of the stacks: " << result << endl;
 
     return 0;
 }

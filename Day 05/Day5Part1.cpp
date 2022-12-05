@@ -26,7 +26,7 @@ int main() {
     while(in) {
         //check for end of diagram
         if(line[1] == '1') break;
-        
+
         // add the character from the crate to its respective column vector
         for(size_t i = 1; i < line.size(); i+=4) {
             char c = line[i];
@@ -69,7 +69,7 @@ int main() {
         result += i.back();
     }
 
-    cout << "result: " << result << endl;
+    cout << "Crates on the top of the stacks: " << result << endl;
 
     return 0;
 }

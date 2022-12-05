@@ -26,16 +26,11 @@ int main() {
     while(in) {
         //check for end of diagram
         if(line[1] == '1') break;
-
-        // remove spaces between each crate on the line
-        for(size_t i = 3; i < line.size(); i+=3) {
-            line.erase(line.begin() + i);
-        }
-
+        
         // add the character from the crate to its respective column vector
-        for(size_t i = 1; i < line.size(); i+=3) {
+        for(size_t i = 1; i < line.size(); i+=4) {
             char c = line[i];
-            int stack = (i-1) / 3;
+            int stack = (i-1) / 4;
 
             if(c == ' ') continue;
             crates[stack].insert(crates[stack].begin(), c);

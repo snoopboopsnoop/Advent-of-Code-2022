@@ -25,7 +25,9 @@ int getScenicScore(const size_t row, const size_t column, const vector<string>& 
         }
         temp++;
     }
-    result *= temp;
+    cout << "from top, score: " << temp << endl;
+    if(temp > 0) result *= temp;
+    
     // check bottom
     temp = 0;
     for(size_t i = rowEnd-1; i > row; --i) {
@@ -36,7 +38,8 @@ int getScenicScore(const size_t row, const size_t column, const vector<string>& 
         }
         temp++;
     }
-    result *= temp;
+    cout << "from bottom, score: " << temp << endl;
+    if(temp > 0) result *= temp;
     // check left
     temp = 0;
     for(size_t i = 0; i <= column; ++i) {
@@ -47,7 +50,8 @@ int getScenicScore(const size_t row, const size_t column, const vector<string>& 
         }
         temp++;
     }
-    result *= temp;
+    cout << "from left, score: " << temp << endl;
+    if(temp > 0) result *= temp;
     // check right
     temp = 0;
     for(size_t i = columnEnd-1; i >= column; --i) {
@@ -58,7 +62,8 @@ int getScenicScore(const size_t row, const size_t column, const vector<string>& 
         }
         temp++;
     }
-    result *= temp;
+    cout << "from right, score: " << temp << endl;
+    if(temp > 0) result *= temp;
 
     cout << "score: " << to_string(result) << endl;
     return result;

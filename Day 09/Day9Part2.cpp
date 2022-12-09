@@ -7,13 +7,17 @@
 
 using namespace std;
 
+// https://www.google.com/search?q=snake but with a physics engine
+
 const int kNumKnots = 9;
 
+// "why didn't you just put all the knots in a vector" fuck you
 struct Knot {
     Knot* next = nullptr;
     pair<int, int> data = make_pair(0, 0);
     Knot* last = nullptr;
 
+    // lmao idk if this even works but who cares i have 32 gb of ram
     ~Knot() {
         if(next == nullptr) {
             this->last->next = nullptr;
@@ -23,26 +27,26 @@ struct Knot {
     }
 };
 
-
-
-// difficulty leap from day 5 down to this one is bigger than your mother
-
+// returns magnitude between coordinates of head and tail
+// if tail is next to head, returns 1
+// if tail is 1 away from head in a single direction, returns 2
+// if tail is 1 away from head in multiple directions, returns sqrt(5)
 double magnitude(const Knot* head, const Knot* tail) {
     return sqrt(pow(head->data.first-tail->data.first, 2)
         + pow(head->data.second-tail->data.second, 2));
 }
 
+// moves tail according to the rules given in the instructions based on magnitude
+// (see magnitude function for return values)
 void moveTail(const Knot* head, Knot* tail) {
     double mag = magnitude(head, tail);
-    //cout << "head and tail have magnitude " << mag << endl;
-    // 1 apart
+    // "dont compare floating points to integers" suck my dick
     if(mag == 2) {
         if(head->data.first > tail->data.first) tail->data.first++;
         else if(head->data.first < tail->data.first) tail->data.first--;
         else if(head->data.second > tail->data.second) tail->data.second++;
         else if(head->data.second < tail->data.second) tail->data.second--;
     }
-    // not in same row or column
     else if(mag > 2) {
         int horizontalDir = (head->data.first > tail->data.first) ? 1 : -1;
         int verticalDir = (head->data.second > tail->data.second) ? 1 : -1;
@@ -50,9 +54,9 @@ void moveTail(const Knot* head, Knot* tail) {
         tail->data.first += horizontalDir;
         tail->data.second += verticalDir;
     }
-    // else they're touching and no need to move
 }
 
+// moves head 1 unit in given direction
 void move(Knot* head, char direction) {
     switch(direction) {
         case 'R': 
@@ -68,9 +72,6 @@ void move(Knot* head, char direction) {
             head->data.second--;
             break;
     }
-    //cout << endl <<  "moved head one to the " << direction << endl;
-    //cout << "head is at " << head->data.first << ", " << head->data.second << endl;
-    //cout << "tail is at " << tail.first << ", " << tail.second << endl << endl;
 }
 
 int main() {
@@ -79,9 +80,8 @@ int main() {
 
     // broke
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
-
-    int result = 0;
     
+    // initialize rope, head and tail pointers
     Knot* head = new Knot;
     Knot* curr = head;
     Knot* temp;
@@ -92,42 +92,36 @@ int main() {
         curr->last = temp;
     }
     Knot* tail = curr;
-    
-
     vector<pair<int, int>> visited;
 
     char direction;
     int amt;
-    //for(int i = 0; i < 3; ++i) {
+
     while(in) {
         in >> direction >> amt;
-        //cout << "moving head " << amt << " to the " << direction << endl;
         for(int i = 0; i < amt; i++) {
             curr = head;
             move(head, direction);
+            // move the next knot according to its previous
             while(curr != tail) {
-                //cout << "next knot moved from " << curr->next->data.first << ", " << curr->next->data.second << " to ";
+                // DEBUG
+                // cout << "next knot moved from " << curr->next->data.first << ", " << curr->next->data.second << " to ";
                 moveTail(curr, curr->next);
-                //cout << curr->next->data.first << ", " << curr->next->data.second << endl;
+                // cout << curr->next->data.first << ", " << curr->next->data.second << endl;
                 curr = curr->next;
             }
             if(find(visited.begin(), visited.end(), tail->data) == visited.end()) {
                 visited.push_back(tail->data);
-                //cout << "tail visited new position at " << tail->data.first << ", " << tail->data.second << endl;
+                // DEBUG:
+                // cout << "tail visited new position at " << tail->data.first << ", " << tail->data.second << endl;
             }
-            //cout << "head moved to " << head->data.first << ", " << head->data.second << endl;
-            //cout << "tail moved to " << tail->data.first << ", " << tail->data.second << endl << endl;
         }
-        //cout << endl;
-        
         //throw away \n
         in.get();
     }
+    cout << "End of rope visited " << visited.size() << " unique positions" << endl;
 
-
-
-    cout << "result: " << visited.size() << endl;
-
+    // pray this actually does something
     delete head;
     return 0;
 }

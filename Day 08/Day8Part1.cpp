@@ -1,60 +1,52 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-// difficulty leap from day 5 down to this one is bigger than your mother
+// https://youtu.be/DuWEEKeJLMI?t=86 he's just like me fr
 
+// returns if tree is visible from any side
 bool isVisible(const size_t row, const size_t column, const vector<string>& map) {
-    bool result = false;
     int val = map[row][column];
-    //cout << "checking tree at row " << row << ", column " << column << " with value " << val << endl;
-
     size_t rowEnd = map.size();
     size_t columnEnd = map[0].size();
+
     // check top
-    for(size_t i = 0; i <= row; ++i) {
-        //cout << "looking at tree at row " << i << ", column " << column << " with value " << map[i][column] << endl;
-        if(i == row) {
-            //cout << "reached tree" << endl;
+    for(int i = row-1; i >= -1; --i) {
+        if(i == -1) {
             return true;
         }
         else if(map[i][column] >= val) {
             break;
         } 
     }
+
     // check bottom
-    for(size_t i = rowEnd-1; i >= row; --i) {
-        //cout << "looking at tree at row " << i << ", column " << column << " with value " << map[i][column] << endl;
-        if(i == row) {
-            //cout << "reached tree" << endl;
+    for(int i = row+1; i <= rowEnd; ++i) {
+        if(i == rowEnd) {
             return true;
         }
         else if(map[i][column] >= val) break;
     }
+
     // check left
-    for(size_t i = 0; i <= column; ++i) {
-        //cout << "looking at tree at row " << row << ", column " << i << " with value " << map[row][i] << endl;
-        if(i == column) {
-            //cout << "reached tree" << endl;
-            return true;
-        }
-        else if(map[row][i] >= val) break;
-    }
-    // check right
-    for(size_t i = columnEnd-1; i >= column; --i) {
-        //cout << "looking at tree at row " << row << ", column " << i << " with value " << map[row][i] << endl;
-        if(i == column) {
-            //cout << "reached tree" << endl;
+    for(int i = column-1; i >= -1; --i) {
+        if(i == -1) {
             return true;
         }
         else if(map[row][i] >= val) break;
     }
 
-    //cout << "Visible: " << boolalpha << result << endl;
-    return result;
+    // check right
+    for(int i = column+1; i <= columnEnd; ++i) {
+        if(i == columnEnd) {
+            return true;
+        }
+        else if(map[row][i] >= val) break;
+    }
+
+    return false;
 }
 
 int main() {
@@ -63,7 +55,6 @@ int main() {
 
     // broke
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
-
 
     int result = 0;
     string line;
@@ -78,13 +69,13 @@ int main() {
     // perimeter is visible
     result += (2*map[0].size() + 2*(map.size()-2));
 
+    // check if each internal tree is visible
     for(size_t row = 1; row < map.size()-1; ++row) {
         for(size_t column = 1; column < map[0].size()-1; ++column) {
             result += isVisible(row, column, map);
         }
     }
-
-    cout << "result " << result << endl;
+    cout << result << " visible trees" << endl;
 
     return 0;
 }

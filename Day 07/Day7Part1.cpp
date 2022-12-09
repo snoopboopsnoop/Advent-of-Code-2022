@@ -43,11 +43,9 @@ vector<Node*>* addNodes(ifstream& in, Node* curr) {
         sin >> first >> second;
 
         if(isdigit(first[0])) {
-            //cout << "found file " << second << endl;
             subtree->push_back(new Node{fileType::file, second, stoi(first), nullptr, curr});
         }
         else {
-            //cout << "found dir " << second << endl;
             subtree->push_back(new Node{fileType::dir, second, -1, new vector<Node*>, curr});
         }
         // check for new command
@@ -118,7 +116,6 @@ int main() {
     // broke
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
 
-    int result = 0;
     string line;
 
     // establish root directory, set to looking at it
@@ -135,30 +132,27 @@ int main() {
         string command;
         sin >> token >> command;
         if(command == "ls") {
-            //cout << "looking in dir " << curr->name << endl;
             curr->next = addNodes(in, curr);
         }
         else if(command == "cd") {
             string dir;
             sin >> dir;
             if(dir == "..") {
-                //cout << "going back" << endl;
                 curr = curr->previous;
             }
             else {
                 for(const auto& i : *(curr->next)) {
                     if(i->name == dir) {
                         curr = i;
-                        //cout << "entering " << curr->name << endl;
                     }
                 }
             }
         }
     }
-    //cout << root << endl;
+    // DEBUG:
+    // cout << root << endl;
 
-    result = solve(root);
-    cout << "Sum of directories with a total size of under " << kCeiling << ": " << result << endl;
+    cout << "Sum of directories with a total size of under " << kCeiling << ": " << solve(root) << endl;
 
     delete root;
     return 0;

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <algorithm>
 #include <vector>
 #include <sstream>
 #include <cctype>
@@ -45,11 +44,9 @@ vector<Node*>* addNodes(ifstream& in, Node* curr) {
         sin >> first >> second;
 
         if(isdigit(first[0])) {
-            //cout << "found file " << second << endl;
             subtree->push_back(new Node{fileType::file, second, stoi(first), nullptr, curr});
         }
         else {
-            //cout << "found dir " << second << endl;
             subtree->push_back(new Node{fileType::dir, second, -1, new vector<Node*>, curr});
         }
         // check for new command
@@ -124,10 +121,9 @@ int main() {
     // broke
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
 
-    int result = 0;
     string line;
 
-    // establish root directory, set to looking at it
+    // establish root directory, set curr to it
     Node* root = new Node{fileType::dir, "/", -1, new vector<Node*>, nullptr};
     Node* curr = root;
 
@@ -136,40 +132,36 @@ int main() {
 
     while(getline(in, line)) {
         istringstream sin(line);
-        // by structure of filesystem, token will always be $
+        // by structure of filesystem and my code, token will always be $
         string token;
         string command;
         sin >> token >> command;
         if(command == "ls") {
-            //cout << "looking in dir " << curr->name << endl;
             curr->next = addNodes(in, curr);
         }
         else if(command == "cd") {
             string dir;
             sin >> dir;
             if(dir == "..") {
-                //cout << "going back" << endl;
                 curr = curr->previous;
             }
             else {
                 for(const auto& i : *(curr->next)) {
                     if(i->name == dir) {
                         curr = i;
-                        //cout << "entering " << curr->name << endl;
                     }
                 }
             }
         }
     }
-    //cout << root << endl;
+    // DEBUG:
+    // cout << root << endl;
 
     // calculate the minimum size of directory to delete (spaceNeeded)
     int usedSpace = size_of(root);
     int spaceNeeded = kMinSpace - (kTotalSpace - usedSpace);
-    //cout << "need to delete " << spaceNeeded << " amount of storage" << endl;
 
-    result = solve(root, spaceNeeded, usedSpace);
-    cout << "Directory to delete increases space by: " << result << endl;
+    cout << "Directory to delete increases space by: " << solve(root, spaceNeeded, usedSpace) << endl;
 
     delete root;
     return 0;

@@ -3,7 +3,8 @@
 #include <sstream>
 #include <vector>
 
-#include "Monkey.h"
+#include "Monkey2.h"
+#include "BigNum.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ using namespace std;
 // tests are always "divisible by"
 // first value in operation is always "old"
 // input format is the same always
+// worry values are always positive
 
 int main() {
     // input stream
@@ -34,11 +36,11 @@ int main() {
         istringstream sin(line);
         string trash;
         int item;
-        vector<int> items;
+        vector<BigNum> items;
         sin >> trash >> trash;
         while(sin) {
             sin >> item >> trash;
-            items.push_back(item);
+            items.push_back(BigNum(to_string(item)));
         }
 
         // operation
@@ -86,6 +88,7 @@ int main() {
     //     monkey.inspect();
     // }
     for(int i = 0; i < rounds; i++) {
+        cout << "round " << i << endl;
         for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {
             //cout << "Monkey " << i << ": " << endl;
             Monkey::getMonkeys()[i].inspect();

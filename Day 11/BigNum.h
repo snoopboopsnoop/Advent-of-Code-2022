@@ -5,12 +5,13 @@
 
 class BigNum {
 public:
-    std::string& getData() const;
+    BigNum(std::string data);
+    std::string getData() const;
     BigNum operator+(const BigNum& rhs) const;
     BigNum operator*(const BigNum& rhs) const;
-    BigNum operator%(int rhs) const;
+    int operator%(int rhs) const;
 private:
-    std::string data;
+    std::string m_data;
 };
 
 #endif

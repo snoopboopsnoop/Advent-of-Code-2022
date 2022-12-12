@@ -75,6 +75,7 @@ int main() {
         // monkey
         Monkey(items, operationVals, testVal, testTrue, testFalse);
 
+        // throw away empty line
         getline(in, line);
     }
 
@@ -92,7 +93,6 @@ int main() {
         if(inspectionCount > mostActive)  {
             secondMostActive = mostActive;
             mostActive = inspectionCount;
-            
         }
         else if(inspectionCount > secondMostActive) secondMostActive = inspectionCount;
     }

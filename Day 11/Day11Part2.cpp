@@ -4,18 +4,17 @@
 #include <vector>
 
 #include "Monkey2.h"
-#include "BigNum.h"
 
 using namespace std;
 
-// https://www.youtube.com/watch?v=VFF2tz8I3r0 me after writing this code
+// https://www.youtube.com/watch?v=sAAqV1Jcfgs me after writing this code
+
 
 // ASSUMPTIONS:
 // operations are either multiplication or addition
 // tests are always "divisible by"
 // first value in operation is always "old"
 // input format is the same always
-// worry values are always positive
 
 int main() {
     // input stream
@@ -25,10 +24,10 @@ int main() {
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
 
     string line;
-    unsigned int result = 0;
-    const int rounds = 2;
-    int mostActive = 0;
-    int secondMostActive = 0;
+    long long result = 0;
+    const int rounds = 10000;
+    long long mostActive = 0;
+    long long secondMostActive = 0;
 
     while(getline(in, line)) {
         // starting items
@@ -36,11 +35,11 @@ int main() {
         istringstream sin(line);
         string trash;
         int item;
-        vector<BigNum> items;
+        vector<int> items;
         sin >> trash >> trash;
         while(sin) {
             sin >> item >> trash;
-            items.push_back(BigNum(to_string(item)));
+            items.push_back(item);
         }
 
         // operation
@@ -59,6 +58,7 @@ int main() {
         sin = istringstream(line);
         int testVal;
         sin >> trash >> trash >> trash >> testVal;
+        Monkey::getEEAAO() *= testVal;
 
         // true/false monkeys
         getline(in, line);
@@ -78,7 +78,9 @@ int main() {
         getline(in, line);
     }
 
-    //for(int i = 0; i < rounds; i++) {
+    cout << Monkey::getEEAAO() << endl;
+
+    // for(int i = 0; i < rounds; i++) {
     // for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {
     //     cout << "monkey " << i << endl;
     //     Monkey::getMonkeys()[i].print();
@@ -88,11 +90,10 @@ int main() {
     //     monkey.inspect();
     // }
     for(int i = 0; i < rounds; i++) {
-        cout << "round " << i << endl;
         for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {
-            cout << "Monkey " << i << ": " << endl;
+            //cout << "Monkey " << i << ": " << endl;
             Monkey::getMonkeys()[i].inspect();
-            cout << endl;
+            //cout << endl;
         }
     }
     for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {

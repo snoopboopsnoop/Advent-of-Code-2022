@@ -5,6 +5,9 @@
 
 using namespace std;
 
+// didn't use these because monkey
+// still want to keep them though
+
 BigNum::BigNum(std::string data) : m_data(data) {}
 
 std::string BigNum::getData() const { return m_data; }

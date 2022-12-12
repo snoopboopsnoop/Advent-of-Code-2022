@@ -3,26 +3,26 @@
 
 #include <string>
 #include <vector>
-#include "BigNum.h"
 
 class Monkey {
 public:
-    Monkey(std::vector<BigNum>& items, std::vector<std::string>& operationVals, int testVal, int testTrue, int testFalse);
+    Monkey(std::vector<int>& items, std::vector<std::string>& operationVals, int testVal, int testTrue, int testFalse);
     // run inspection on each item monkey is holding
     void inspect();
     int getInspectionCount() const;
-    const std::vector<BigNum>& getItems() const;
+    const std::vector<long long>& getItems() const;
     static std::vector<Monkey>& getMonkeys();
+    static int& getEEAAO();
     // add item to items vector
-    void addItem(BigNum item);
+    void addItem(long long item);
     void print();
 private:
     // run operation
-    void operation(BigNum& item);
+    void operation(long long& item);
     // run test case, return result
-    bool test(BigNum& item);
+    bool test(long long& item);
 
-    std::vector<BigNum> m_items;
+    std::vector<long long> m_items;
     // operation, val2
     std::vector<std::string> m_operationVals;
     // number to be divisble by
@@ -34,6 +34,7 @@ private:
     int m_testFalse;
 
     static std::vector<Monkey> m_monkeys;
+    static int EEAAO;
 };
 
 

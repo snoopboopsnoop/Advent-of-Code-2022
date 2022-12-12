@@ -10,7 +10,7 @@ public:
     // run inspection on each item monkey is holding
     void inspect();
     int getInspectionCount() const;
-    const std::vector<int>& getItems() const;
+    std::vector<int>& getItems() const;
     static std::vector<Monkey>& getMonkeys();
     // add item to items vector
     void addItem(int item);

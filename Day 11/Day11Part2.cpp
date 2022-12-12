@@ -26,7 +26,7 @@ int main() {
 
     string line;
     unsigned int result = 0;
-    const int rounds = 1000;
+    const int rounds = 2;
     int mostActive = 0;
     int secondMostActive = 0;
 
@@ -90,9 +90,9 @@ int main() {
     for(int i = 0; i < rounds; i++) {
         cout << "round " << i << endl;
         for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {
-            //cout << "Monkey " << i << ": " << endl;
+            cout << "Monkey " << i << ": " << endl;
             Monkey::getMonkeys()[i].inspect();
-            //cout << endl;
+            cout << endl;
         }
     }
     for(size_t i = 0; i < Monkey::getMonkeys().size(); ++i) {

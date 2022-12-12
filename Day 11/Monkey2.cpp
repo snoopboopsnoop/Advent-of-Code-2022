@@ -26,37 +26,29 @@ Monkey::Monkey(std::vector<BigNum>& items, std::vector<std::string>& operationVa
 }
 
 void Monkey::inspect() {
-    cout << "inspecting item" << endl;
     int sendMonkey = 0;
     auto beg = m_items.begin();
 
     while(beg != m_items.end()) {
-        // cout<< "monkey is holding " << m_items.size() << " items" << endl;
 
-        // cout<< "monkey inspects an item with worry level of " << beg->getData() << endl;
+        cout<< "monkey inspects an item with worry level of " << beg->getData() << endl;
         operation(*beg);
         bool result = test(*beg);
         if(result == true) {
-            // cout<< "current worry level is divisible by " << m_testVal << endl;
-            // cout<< "item with worry level " << beg->getData() << " is thrown to monkey " << m_testTrue << endl;
-            cout << "Throwing to monkey" << endl;
+            cout<< "current worry level is divisible by " << m_testVal << endl;
+            cout<< "item with worry level " << beg->getData() << " is thrown to monkey " << m_testTrue << endl;
             m_monkeys[m_testTrue].addItem(beg->getData());
-            cout << "Thrown to monkey" << endl;
         } 
         else {
-            // cout<< "current worry level is not divisible by " << m_testVal << endl;
-            // cout<< "item with worry level " << beg->getData() << " is thrown to monkey " << m_testFalse << endl;
-            cout << "Throwing to monkey" << endl;
+            cout<< "current worry level is not divisible by " << m_testVal << endl;
+            cout<< "item with worry level " << beg->getData() << " is thrown to monkey " << m_testFalse << endl;
             m_monkeys[m_testFalse].addItem(beg->getData());
-            cout << "Thrown to monkey" << endl;
         }
-        // cout<< "erasing item with worry level " << beg->getData() << endl;
         beg = m_items.erase(beg);
         //if(m_items.size() == 0) break;
         m_inspectionCount++;
-        // cout<< endl;
+        cout<< endl;
     }
-    // cout<< "reached end of monkey items" << endl;
 }
 
 int Monkey::getInspectionCount() const { return m_inspectionCount; }
@@ -72,7 +64,7 @@ void Monkey::print() {
     for(const BigNum& i : m_items) {
         cout<< i.getData() << ", ";
     }
-    // cout<< "operation ";
+    cout<< "operation ";
     for(const string& i : m_operationVals) {
         cout<< i << " ";
     }
@@ -86,39 +78,36 @@ void Monkey::addItem(BigNum item) {
 }
 
 void Monkey::operation(BigNum& item) {
-    cout << "doing math..." << endl;
-    // cout<< "worry level ";
+    cout<< "worry level ";
     if(m_operationVals[0] == "+") {
-        // cout<< "increases by ";
+        cout<< "increases by ";
         if(m_operationVals[1] == "old") {
-            // cout<< "itself to ";
+            cout<< "itself to ";
             item = item + item;
-            // cout<< item.getData() << endl;
+            cout<< item.getData() << endl;
         }
         else {
-            // cout<< stoi(m_operationVals[1]) << " to ";
+            cout<< stoi(m_operationVals[1]) << " to ";
             item = item + BigNum(m_operationVals[1]);
-            // cout<< item.getData() << endl;
+            cout<< item.getData() << endl;
         } 
     }
     else {
-        // cout<< "is multiplied by ";
+        cout<< "is multiplied by ";
         if(m_operationVals[1] == "old") {
-            // cout<< "itself to ";
+            cout<< "itself to ";
             item = item * item;
-            // cout<< item.getData();
+            cout << item.getData() << endl;
         }
         else {
-            // cout<< stoi(m_operationVals[1]) << " to ";
+            cout<< stoi(m_operationVals[1]) << " to ";
             item = item * BigNum(m_operationVals[1]);
-            // cout<< item.getData() << endl;
+            cout<< item.getData() << endl;
         }
     }
-    cout << "finished math" << endl;
 }
 
 bool Monkey::test(BigNum& item) {
-    cout << "modding..." << endl;
     if(item % m_testVal == 0) return true;
     return false;
 }

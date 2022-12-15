@@ -95,9 +95,6 @@ void expand(Node* curr, const pair<int, int>& check, vector<Node*>& stack, vecto
         // cout << "not seen yet, adding node to stack" << endl;
         stack.push_back(new Node(check, curr));
         refresh(stack);
-        // for(Node* i : stack) {
-        //     i->print();
-        // }
     }
     else {
         // cout << "already on stack" << endl;
@@ -138,6 +135,9 @@ int search(vector<Node*>& stack, vector<Node*>& visited, const vector<string>& m
             (map[curr->location.second][curr->location.first+1] - map[curr->location.second][curr->location.first])
             <= 1) {
                 expand(curr, make_pair(curr->location.first+1, curr->location.second), stack, visited, map);
+        }
+        if(stack.size() == 0) {
+            return -1;
         }
         visited.push_back(curr);
         curr = stack[0];
@@ -191,8 +191,6 @@ int main() {
     stack.push_back(start);
 
     result = search(stack, visited, map);
-    
-
     
 
     delete Node::goal;

@@ -75,8 +75,8 @@ void refresh(vector<Node*>& stack) {
 }
 
 void expand(Node* curr, const pair<int, int>& check, vector<Node*>& stack, vector<Node*>& visited, const vector<string>& map) {
-    // cout << "Expanding on Node at " << curr->location.first << ", " << curr->location.second << endl;
-    // cout << "Looking at neighboring Node at " << check.first << ", " << check.second << endl;
+    //cout << "Expanding on Node at " << curr->location.first << ", " << curr->location.second << endl;
+    //cout << "Looking at neighboring Node at " << check.first << ", " << check.second << endl;
     // add adjacent to curr into read vector
     // up
     auto inVisited = find_if(visited.begin(), visited.end(), [check](Node* i) {
@@ -84,7 +84,7 @@ void expand(Node* curr, const pair<int, int>& check, vector<Node*>& stack, vecto
                i->location.second == check.second);
     });
     if(inVisited != visited.end()) {
-        // cout << "already expanded on" << endl;
+        //cout << "already expanded on" << endl;
         return;
     }
     auto found = find_if(stack.begin(), stack.end(), [check](Node* i) {
@@ -92,7 +92,7 @@ void expand(Node* curr, const pair<int, int>& check, vector<Node*>& stack, vecto
                i->location.second == check.second);
     });
     if(found == stack.end()) {
-        // cout << "not seen yet, adding node to stack" << endl;
+        //cout << "not seen yet, adding node to stack" << endl;
         stack.push_back(new Node(check, curr));
         refresh(stack);
         // for(Node* i : stack) {
@@ -100,14 +100,15 @@ void expand(Node* curr, const pair<int, int>& check, vector<Node*>& stack, vecto
         // }
     }
     else {
-        // cout << "already on stack" << endl;
+        //cout << "already on stack" << endl;
         // check if distance is smaller
         if((*found)->steps > curr->steps+1) {
-            // cout << "more efficient route to this Node found" << endl;
+            //cout << "more efficient route to this Node found" << endl;
             (*found)->prev = curr;
             (*found)->steps = curr->steps+1;
         }
     }
+    //cout << endl;
 }
 
 int search(vector<Node*>& stack, vector<Node*>& visited, const vector<string>& map) {
@@ -138,6 +139,9 @@ int search(vector<Node*>& stack, vector<Node*>& visited, const vector<string>& m
             (map[curr->location.second][curr->location.first+1] - map[curr->location.second][curr->location.first])
             <= 1) {
                 expand(curr, make_pair(curr->location.first+1, curr->location.second), stack, visited, map);
+        }
+        if(stack.size() == 0) {
+            return -1;
         }
         visited.push_back(curr);
         curr = stack[0];
@@ -171,6 +175,7 @@ int algorithm(Node* start, const vector<string>& map) {
         // i->print();
         delete i;
     }
+
     return result;
 }
 
@@ -208,11 +213,12 @@ int main() {
             }
         }
     }
-    for(Node* i : start) {
-        cout << "starting from " << i->location.first << ", " << i->location.second << endl;
-        int temp = algorithm(i, map);
-        cout << temp << " steps to end" << endl;
-        if(temp < result || result == 0) {
+
+    cout << "instances of a: " << start.size() << endl;
+    for(size_t i = 0; i < start.size(); ++i) {
+        //cout << "starting from " << start[i]->location.first << ", " << start[i]->location.second << endl;
+        int temp = algorithm(start[i], map);
+        if((temp < result || result == 0) && temp != -1) {
             result = temp;
         }
     }

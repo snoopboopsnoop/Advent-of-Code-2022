@@ -208,14 +208,16 @@ int main() {
             }
         }
     }
-
-    result = algorithm(start[0], map);
+    for(Node* i : start) {
+        cout << "starting from " << i->location.first << ", " << i->location.second << endl;
+        int temp = algorithm(i, map);
+        cout << temp << " steps to end" << endl;
+        if(temp < result || result == 0) {
+            result = temp;
+        }
+    }
 
     cout << "result: " << result << endl;
-
-    for(Node* i : start) {
-        delete i;
-    }
 
     delete Node::goal;
     return 0;

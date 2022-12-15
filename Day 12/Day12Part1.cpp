@@ -187,14 +187,13 @@ int main() {
 
     vector<Node*> stack;
     vector<Node*> visited;
-    Node* curr = start;
 
-    stack.push_back(curr);
+    stack.push_back(start);
 
     result = search(stack, visited, map);
     
 
-    cout << "result: " << result << endl;
+    
 
     delete Node::goal;
     for(Node* i: stack) {
@@ -207,5 +206,7 @@ int main() {
         // i->print();
         delete i;
     }
+
+    cout << "result: " << result << endl;
     return 0;
 }

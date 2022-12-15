@@ -147,8 +147,8 @@ int search(vector<Node*>& stack, vector<Node*>& visited, const vector<string>& m
     // cout << "goal:" << endl;
     // Node::goal->print();
 
-    //curr->printRoute();
-    //cout << endl;
+    // curr->printRoute();
+    // cout << endl;
     return curr->steps;
 }
 
@@ -160,6 +160,7 @@ int algorithm(Node* start, const vector<string>& map) {
     stack.push_back(start);
     
     result = search(stack, visited, map);
+
     for(Node* i: stack) {
         // cout << "stack deleting ";
         // i->print();
@@ -184,9 +185,7 @@ int main() {
     string line;
     // increases down and right
     vector<string> map;
-    vector<pair<int, int>> started;
-
-    Node* start = nullptr;
+    vector<Node*> start;
 
     while(getline(in, line)) {
         map.push_back(line);
@@ -204,30 +203,19 @@ int main() {
     for(size_t i = 0; i < map.size(); ++i) {
         for(size_t j = 0; j < map[0].size(); ++j) {
             if(map[i][j] == 'S' || map[i][j] == 'a') {
-                started.push_back(make_pair(j, i));
+                start.push_back(new Node(make_pair(j, i)));
                 map[i][j] = 'a';
-                int temp = algorithm(start, map);
-                cout << temp << "steps to end from (" << j << ", " << i << ")" << endl;
-                if(temp < result || result == 0) {
-                    result = temp;
-                }
-            }
-            else if(map[i][j] == 'a') {
-                start = new Node(make_pair(j, i));
-                started.push_back(make_pair(j, i));
-                int temp = algorithm(start, map);
-                cout << temp << "steps to end from (" << j << ", " << i << ")" << endl;
-                if(temp < result || result == 0) {
-                    result = temp;
-                }
             }
         }
     }
 
-    result = algorithm(start, map);
-    
+    result = algorithm(start[0], map);
 
     cout << "result: " << result << endl;
+
+    for(Node* i : start) {
+        delete i;
+    }
 
     delete Node::goal;
     return 0;

@@ -2,101 +2,129 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
-#include <locale>
+#include <vector>
 
 using namespace std;
 
 // difficulty leap from day 5 down to this one is bigger than your mother
 
-string strip(const string& s) {
-    string result = s;
-    if(s[0] == '[' && s[s.size()-1] == ']') {
-        result.erase(result.begin());
-        result.erase(result.end()-1);
+vector<string> to_stack(const string& s) {
+    // ignore beg and end brackets
+
+    auto beg = s.begin()+1;
+    auto end = s.end()-1;
+
+    vector<string> result;
+
+    while(beg != end) {
+        //cout << "looking at char " << *beg << endl;
+        if(*beg == ',') {
+            ++beg;
+            continue;
+        }
+        if(*beg == '[') {
+            auto temp = beg+1;
+            int order = 0;
+            while(*temp != ']' || order != 0) {
+                if(*temp == '[') order++;
+                else if(*temp == ']') order--;
+                ++temp;
+            }
+            result.push_back(string(beg, temp+1));
+            beg = temp+1;
+            continue;
+        }
+        else {
+            auto temp = find(beg, s.end(), ',');
+            if(temp == s.end()) {
+                result.push_back(string(beg, s.end()-1));
+            }
+            else result.push_back(string(beg,temp));
+        }
+        ++beg;
     }
+
     return result;
 }
 
-bool compare(const string& s1, const string& s2) {
-    cout << "- Compare " << s1 << " vs " << s2 << endl;
-    if(s1 == "") {
-        cout << "s1 is empty, correct order" << endl;
-        return true;
+ostream& print(ostream& out, const vector<string>& s) {
+    if(s.size() == 0) { 
+        out << "[]";
+        return out;
     }
-    else if(s2 == "") {
-        cout << "s2 is empty, wrong order" << endl;
-        return false;
+    out << "[" << s[0];
+    for(size_t i = 1; i < s.size(); i++) {
+        out << "," << s[i];
     }
-
-    // if list
-    if(s1[0] == '[') {
-        if(s2[0] == '[') {
-            cout << "2 lists" << endl;
-            string sub1, sub2;
-            int end1 = s1.find("],");
-            int end2 = s2.find("],");
-            if(end1 == string::npos) {
-                cout << "only 1 item in s1" << endl;
-                sub1 = strip(s1);
-            }
-            else {
-                sub1 = s1.substr(0, s1.find("],")+1);
-            }
-            if(end2 == string::npos) {
-                cout << "only 1 item in s2" << endl;
-                sub2 = strip(s1);
-            }
-            else {
-                sub2 = s2.substr(0, s2.find("],")+1);
-            }
-            while(sub1 != "") {
-                compare(sub1, sub2);
-                sub1 = 
-            }
-            
-            //cout << "sub1: " << sub1 << ", sub2: " << sub2 << endl;
-            return compare(sub1, sub2);
-            
-        }
-        else {
-           cout << "s1 is a list, s2 is a list" << endl;
-        }
-    }
-    else if(s2[0] == '[') {
-        cout << "s2 is a list, s1 is not" << endl;
-    }
-    else {
-        cout << "Compare " << s1[0] << " vs " << s2[0] << endl;
-        if(s1[0] > s2[0]) {
-            cout << "right side is smaller, so inputs are not in the right order" << endl;
-            return false;
-        }
-        else if(s1[0] < s2[0]) {
-            cout << "left side smaller, so inputs are in the right order" << endl;
-            return true;
-        }
-        else {
-            cout << "both sides are equal, continuing" << endl;
-            string sub1, sub2;
-            sub1 = s1.substr(s1.find(',')+1);
-            sub2 = s2.substr(s2.find(',')+1);
-            return compare(sub1, sub2);
-        }
-    }
-
-    return false;
+    out << "]";
+    return out;
 }
 
-bool compare_wrapper(istream& in) {
-    string s1, s2, trash;
-    getline(in, s1);
-    getline(in, s2);
+int compare(const vector<string>& s1, const vector<string>& s2) {
+    cout << "- Compare ";
+    print(cout, s1);
+    cout << " vs ";
+    print(cout, s2) << endl;
 
-    compare(s1, s2);
+    // if 1 is empty and the other isn't
+    if(s1.size() == 0 && s2.size() != 0) {
+        return 1;
+    }
+    else if(s2.size() == 0 && s1.size() != 0) {
+        return 0;
+    }
+    else if(s1.size() == 0 && s2.size() == 0) {
+        return -1;
+    }
 
-    getline(in, trash);
-
-    return false;
+    for(size_t i = 0; i < s1.size(); ++i) { 
+        
+        if(s1[i][0] == '[') {
+            vector<string> temp1 = to_stack(s1[i]);
+            vector<string> temp2;
+            if(s2[i][0] == '[') {
+                temp2 = to_stack(s2[i]);
+            }
+            else {
+                ostringstream out;
+                out << '[' << s2[i] << ']';
+                temp2 = to_stack(out.str());
+            }
+            int result = compare(temp1, temp2);
+            if(result == 1) return 1;
+            else if(result == 0) return 0;
+        }
+        else if(s2[i][0] == '[') {
+            vector<string> temp2 = to_stack(s2[i]);
+            ostringstream out;
+            out << '[' << s1[i] << ']';
+            vector<string> temp1 = to_stack(out.str());
+            int result = compare(temp1, temp2);
+            if(result == 1) return 1;
+            else if(result == 0) return 0;
+        }
+        else {
+            cout << "- Compare " << s1[i] << " vs " << s2[i] << endl;
+            if(stoi(s1[i]) < stoi(s2[i])) {
+                return 1;
+            }
+            else if(stoi(s1[i]) > stoi(s2[i])) {
+                return 0;
+            }
+            else {
+                //cout << "same, continuing" << endl;
+                if(i == s1.size()-1 && i == s2.size()-1) return -1;
+            }
+        }
+        if(i == s2.size()-1 && i != s1.size()-1) {
+            return 0;
+        }
+    }
+    if(s1.size() < s2.size()) return 1;
+    else if(s1.size() > s2.size()) return 0;
+    else if(s1.size() == s2.size()) {
+        return -1;
+    }
 }
 
 int main() {
@@ -108,12 +136,28 @@ int main() {
 
     int result = 0;
     string line;
-    
-    //while(in) {
-    for(int i = 0; i < 2; ++i) {
-        compare_wrapper(in);
-    }
+    vector<string> s1;
+    vector<string> s2;
 
+    //while(in) {
+    // while() {
+    int index = 1;
+    while(getline(in, line)) {
+        cout << "Pair " << index << ": " << endl;
+        s1 = to_stack(line);
+        getline(in, line);
+        s2 = to_stack(line);
+
+        int temp = compare(s1, s2);
+        if(temp == 1 || temp == -1) {
+            cout << "Pair " << index << " is in the right order" << endl;
+            result += index;
+        }
+
+        getline(in, line);
+        index++;
+        cout << endl;
+    }
     // while(getline(in, line)) {
     //     istringstream sin(line);
     //     sin.imbue(locale(sin.getloc(), new is_space));

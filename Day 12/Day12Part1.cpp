@@ -180,8 +180,6 @@ int main() {
             else if(map[i][j] == 'E') {
                 Node::goal = new Node(make_pair(j, i));
                 map[i][j] = 'z';
-                // cout << "goal:" << endl;
-                // Node::goal->print();
             }
         }
     }

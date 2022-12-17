@@ -34,7 +34,7 @@ int main() {
     // broke
     if(!in) cerr << "oops tehre was a fucky wucky" << endl;
 
-    const long long kLevel = 2000000;
+    const long long kLevel = 6;
 
     vector<Sensor> sensors;
     string line;
@@ -141,31 +141,50 @@ int main() {
     }
 
     sort(covered.begin(), covered.end(), [](const pair<long long, long long>& a, const pair<long long, long long>& b) {
-        return a.first < b.first;
+        return a.first > b.first;
     });
 
-    covered.erase(covered.begin()+1, covered.end());
-    // for(int j = 0; j < covered.size(); j++) {
-    //     int min = covered[j].first;
-    //     int max = covered[j].second;
-    //     cout << "range: " << min << " - " << max << endl; 
-    //     auto found = find_if(covered.begin(), covered.end(), [min, max](const pair<long long, long long>& i) {
-    //         //cout << "checking " << i.first << " - " << i.second << " vs " << min << " - " << max << endl;
-    //         return ((i.first <= max && max <= i.second && min <= i.first) ||
-    //                 (i.second >= min && min >= i.first && max >= i.second));
-    //     });
+    cout << "x values that are covered along y=" << kLevel << endl;
+    for(const pair<long long, long long>& i : covered) {
+        cout << i.first << " - " << i.second << endl;
+    }
+    cout << endl;
 
-    //     if(found != covered.end()) {
-    //         if(found->first <= max && max < found->second && min < found->first) {
-    //             found->first = min;
-    //         }
-    //         if(found->second >= min && min > found->first && max > found->second) {
-    //             found->second = max;
-    //         }
-    //         covered.erase(covered.begin() + j);
-    //     }
-    // }
-    // cout << endl;
+    //covered.erase(covered.begin()+1, covered.end());
+    auto beg = covered.begin();
+    while(beg != covered.end()) {
+        int min = beg->first;
+        int max = beg->second;
+        cout << "range: " << min << " - " << max << endl; 
+        auto found = find_if(covered.begin(), covered.end(), [min, max](const pair<long long, long long>& i) {
+            cout << "checking " << i.first << " - " << i.second << " vs " << min << " - " << max << endl;
+            if(i.first == min && i.second == max) { cout << "same" << endl; return false; }
+            return ((i.first <= max && max <= i.second && min <= i.first) ||
+                    (i.second >= min && min >= i.first && max >= i.second) ||
+                    (i.first <= min && i.second >= max));
+        });
+
+        if(found != covered.end()) {
+            cout << "found overlap" << endl;
+            if(found->first <= max && max < found->second && min < found->first) {
+                found->first = min;
+            }
+            if(found->second >= min && min > found->first && max > found->second) {
+                found->second = max;
+            }
+            covered.erase(beg);
+        }
+        else { 
+            cout << "no overlap / consumed" << endl;
+            beg++;
+        }
+        cout << "x values that are covered along y=" << kLevel << endl;
+        for(const pair<long long, long long>& i : covered) {
+            cout << i.first << " - " << i.second << endl;
+        }
+        cout << endl;
+    }
+    cout << endl;
 
     cout << "x values that are covered along y=" << kLevel << endl;
     for(const pair<long long, long long>& i : covered) {

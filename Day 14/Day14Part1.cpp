@@ -2,13 +2,16 @@
 #include <fstream>
 #include <sstream>
 #include <utility>
-#include <algorithm>
 #include <vector>
 
 using namespace std;
 
-// difficulty leap from day 5 down to this one is bigger than your mother
+// "That is cool!" - Juliette
 
+// prints the shit
+// @param out - ostream to send to
+// @param scan - vector to print
+// @return out
 ostream& print(ostream& out, const vector<string>& scan) {
     for(const string& i : scan) {
         out << i << endl;
@@ -16,6 +19,10 @@ ostream& print(ostream& out, const vector<string>& scan) {
     return out;
 }
 
+// check if sand position is out of bound
+// @param sand - coord of sand
+// @param scan - vector
+// @return if sand is out of bounds
 bool abyss(const pair<int, int>& sand, const vector<string>& scan) {
     if(sand.second >= scan.size() || sand.first >= scan[0].size() || sand.first < 0) {
         return 1;
@@ -23,6 +30,10 @@ bool abyss(const pair<int, int>& sand, const vector<string>& scan) {
     return 0;
 }
 
+// sends sand downwards until it hits something or falls out of bounds
+// @param sand - coord of sand
+// @param scan - 2d vector
+// @return 1 if out of bounds, 0 if completed fall
 bool fall(pair<int, int>& sand, const vector<string>& scan) {
     while(scan[sand.second][sand.first] != '#' && scan[sand.second][sand.first] != 'o') {
         sand.second++;
@@ -34,44 +45,49 @@ bool fall(pair<int, int>& sand, const vector<string>& scan) {
     return 0;
 }
 
+// simulate sand falling from start through scan
+// @param scan - 2d vector
+// @param start - coord where sand falls from
+// @return grains of sand that are dropped before one falls out of bounds
 int simulate(vector<string>& scan, const pair<int, int>& start) {
+    // lots of debug couts
     int index = 0;
-
     pair<int, int> curr;
-    //cout << "starting from " << start.first << ", " << start.second << endl;
+    // until something falls out of bounds
     while(true){
         bool rest = false;
         curr = start;
+
         // fall down
         while(rest == false) {
             if(scan[curr.second+1][curr.first] == '.') {
                 if(fall(curr, scan) == 1) return index;
                 //cout << "sand fell to " << curr.first << ", " << curr.second << endl;
             }
+            // try fall diagonal left
             if(scan[curr.second+1][curr.first-1] != '#' && scan[curr.second+1][curr.first-1] != 'o') {
                 curr.second++;
                 curr.first--;
                 //cout << "sand fell left to " << curr.first << ", " << curr.second << endl;
                 if(abyss(curr, scan) == 1) { return index;}
             }
+            // try fall diagonal right
             else if(scan[curr.second+1][curr.first+1] != '#' && scan[curr.second+1][curr.first+1] != 'o') {
                 curr.second++;
                 curr.first++;
                 //cout << "sand fell right to " << curr.first << ", " << curr.second << endl;
                 if(abyss(curr, scan) == 1) { return index;}
             }
+            // if can't go anywhere then it's at rest
             else rest = true;
         }
-
-        cout << "sand rested at " << curr.first << ", " << curr.second << endl;
-
+        // cout << "sand rested at " << curr.first << ", " << curr.second << endl;
         scan[curr.second][curr.first] = 'o';
         index++;
 
         // print(cout, scan);
         // cout << endl;
     }
-
     return 0;
 }
 
@@ -84,11 +100,13 @@ int main() {
 
     string line;
 
+    // where sand falls from
     const pair<int, int> kStart(500, 0);
 
     pair<int, int> max(kStart);
     pair<int, int> min(kStart);
 
+    // PART 1: initialize vector map size
     while(getline(in, line)) {
         istringstream sin(line);
         int x, y;
@@ -106,23 +124,16 @@ int main() {
         }
     }
 
+    // scale vector based on the min/max coords
     const int kWidth = max.first - min.first + 1;
     const int kHeight = max.second - min.second + 1;
-
-    cout << "maximum coord: " << max.first << ", " << max.second << endl;
-    cout << "minimum coord: " << min.first << ", " << min.second << endl;
-
-    cout << "box with height " << kHeight << " and width " << kWidth << endl;
 
     string row = string(kWidth, '.');
     vector<string> scan(kHeight, row);
 
-    // for(const string& i : scan) {
-    //     cout << i << endl;
-    // }
-
     in = ifstream("input.txt");
 
+    // PART 2: draw lines on scan based on input
     // intialize scan
     while(getline(in, line)) {
         istringstream sin(line);
@@ -171,15 +182,12 @@ int main() {
                     }
                 }
             }
-
             x1 = x2;
             y1 = y2;
 
             sin >> trash;
         }
     }
-
-
     const pair<int, int> start = make_pair(kStart.first - min.first, kStart.second - min.second);
 
     int result = simulate(scan, start);
@@ -187,7 +195,7 @@ int main() {
     print(cout, scan);
     cout << endl;
 
-    cout << "result: " << result << endl;
+    cout << result << " units of sand come to rest before sand starts flowing into the abyss" <<endl;
 
     return 0;
 }

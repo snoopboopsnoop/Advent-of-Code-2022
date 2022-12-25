@@ -27,9 +27,9 @@ struct Node {
     void print() {
         cout << "Node " << name;
         if(next.size() != 0) {
-            cout << " points to " << next[0];
+            cout << " points to " << next[0]->name;
             for(int i = 1; i < next.size(); ++i) {
-                cout << ", " << next[i];
+                cout << ", " << next[i]->name;
             }
         }
         cout << endl;
@@ -81,31 +81,41 @@ int main() {
         system.push_back(Valve(rate));
 
         istringstream sin(line);
+        // cout << "line: " << line << endl;
         string next;
         sin >> next;
         vector<Node*> vNext;
+        sin >> next;
         while(sin) {
-            sin >> next;
+            // cout << "next: " << next << endl;
+            if(next.back() == ',') next.erase(next.end()-1);
             auto found = find_if(graph.nodes.begin(), graph.nodes.end(), [next](const Node* i) {
                 return i->name == next;
             });
 
             // add Ndoe to next vector, also add to graph if doesn't exist
             if(found == graph.nodes.end()) {
+                // cout << "node " << next << " doesn't exist, adding it to grpah" << endl;
                 Node* temp = new Node(next);
                 vNext.push_back(temp);
                 graph.nodes.push_back(temp);
             }
             else {
+                // cout << "node " << name << " points to " << next << endl;
                 vNext.push_back(*found);
             }
+            sin >> next;
         }
 
-
-        if(find_if(graph.nodes.begin(), graph.nodes.end(), [name](const Node* i) {
+        auto found = find_if(graph.nodes.begin(), graph.nodes.end(), [name](const Node* i) {
             return i->name == name;
-        }) == graph.nodes.end()) {
-            graph.nodes.push_back(name, nullptr, vNext);
+        });
+        if(found == graph.nodes.end()) {
+            // cout << "adding node " << name << " to graph" << endl;
+            graph.nodes.push_back(new Node(name, nullptr, vNext));
+        }
+        else {
+            (*found)->next.insert((*found)->next.end(), vNext.begin(), vNext.end());
         }
     }
 
@@ -115,7 +125,34 @@ int main() {
 
     int result = 0;
 
+    cout << endl;
+
+    sort(graph.nodes.begin(), graph.nodes.end(), [](const Node* a, const Node* b) {
+        return a->name < b->name;
+    });
+
     graph.print();
+
+    // run djikstra on it to get the shortest path to any node from any node
+
+    // try it for just A
+    map<string, int> paths;
+    vector<Node*> visited;
+    vector<Node*> unvisited = graph.nodes;
+
+    for(const Node* i : graph.nodes) {
+        if(i->name == "AA") {
+            paths.insert(make_pair("AA", 0));
+        }
+        else {
+            paths.insert(make_pair(i->name, -1));
+        }
+    }
+    
+
+    while (unvisited.size() != 0) {
+        Node* curr = unvisited[0];
+    }
 
     cout << "result: " << result << endl;
 
